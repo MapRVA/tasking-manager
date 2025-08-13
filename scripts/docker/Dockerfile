@@ -61,14 +61,13 @@ COPY --from=uv /uv /usr/local/bin/uv
 COPY --chown=appuser:appuser --chmod=755 pyproject.toml uv.lock /_lock/
 
 # Ensure caching & install with or without monitoring, depending on flag
-RUN --mount=type=cache,target=/root/.cache <<EOT
+RUN --mount=type=cache,target=/root/.cache \
     uv sync \
-        --project /_lock \
-        --locked \
-        --no-editable \
-        --no-dev \
-        --no-install-project
-EOT
+    --project /_lock \
+    --locked \
+    --no-editable \
+    --no-dev \
+    --no-install-project
 
 FROM base AS runtime
 ARG PYTHON_IMG_TAG
@@ -116,16 +115,15 @@ FROM runtime AS debug
 # Copy UV binary
 COPY --from=uv /uv /usr/local/bin/uv
 COPY pyproject.toml uv.lock /_lock/
-RUN --mount=type=cache,target=/root/.cache <<EOT
+RUN --mount=type=cache,target=/root/.cache \
     uv sync \
-        --project /_lock \
-        --locked \
-        --no-editable \
-        --no-install-project \
-        --group test \
-        --group lint \
-        --group dev
-EOT
+    --project /_lock \
+    --locked \
+    --no-editable \
+    --no-install-project \
+    --group test \
+    --group lint \
+    --group dev
 
 EXPOSE 5678
 EXPOSE 5000
