@@ -2,7 +2,7 @@ name: Build frontend container
 on:
   push:
     branches:
-      - main
+      - production
       - staging
       - develop
 

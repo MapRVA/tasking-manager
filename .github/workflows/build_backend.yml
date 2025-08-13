@@ -2,7 +2,7 @@ name: Build backend container
 on:
   push:
     branches:
-      - main
+      - production
       - staging
       - develop
 
