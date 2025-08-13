@@ -2,33 +2,34 @@
 export const API_VERSION = process.env.REACT_APP_API_VERSION || 'v2';
 export const API_URL = process.env.REACT_APP_API_URL
   ? new URL('/api/' + API_VERSION + '/', process.env.REACT_APP_API_URL)
-  : 'http://127.0.0.1:5000/api/' + API_VERSION + '/';
+  : 'https://tasks.maprva.org/api/' + API_VERSION + '/';
 export const OHSOME_STATS_BASE_URL =
   process.env.REACT_APP_OHSOME_STATS_BASE_URL || 'https://stats.now.ohsome.org';
 export const OHSOME_STATS_API_URL =
   process.env.REACT_APP_OHSOME_STATS_API_URL || 'https://stats.now.ohsome.org/api';
+export const OHSOME_STATS_TOPICS =
+  process.env.REACT_APP_OHSOME_STATS_TOPICS || 'highway,waterway,building,poi';
 // APPLICATION SETTINGS
 export const DEFAULT_LOCALE = process.env.REACT_APP_DEFAULT_LOCALE || 'en';
 export const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT || '';
 export const PROJECTCARD_CONTRIBUTION_SHOWN_THRESHOLD =
   process.env.REACT_APP_PROJECTCARD_CONTRIBUTION_SHOWN_THRESHOLD || 5;
-export const INTERMEDIATE_LEVEL_COUNT =
-  Number(process.env.REACT_APP_TM_MAPPER_LEVEL_INTERMEDIATE) || 250;
-export const ADVANCED_LEVEL_COUNT = Number(process.env.REACT_APP_TM_MAPPER_LEVEL_ADVANCED) || 500;
 export const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN || '';
 export const ENABLE_SERVICEWORKER = process.env.REACT_APP_ENABLE_SERVICEWORKER || 0;
 export const MAX_AOI_AREA = Number(process.env.REACT_APP_MAX_AOI_AREA) || 5000;
 export const MAX_FILESIZE = parseInt(process.env.REACT_APP_MAX_FILESIZE) || 1000000; // bytes
 
 // ORGANISATIONAL INFORMATION
-export const ORG_NAME = process.env.REACT_APP_ORG_NAME || 'Humanitarian OpenStreetMap Team';
-export const ORG_CODE = process.env.REACT_APP_ORG_CODE || 'HOT';
-export const ORG_URL = process.env.REACT_APP_ORG_URL || '';
-export const ORG_LOGO = process.env.REACT_APP_ORG_LOGO || '';
+export const ORG_NAME = process.env.REACT_APP_ORG_NAME || 'MapRVA';
+export const ORG_CODE = process.env.REACT_APP_ORG_CODE || 'MapRVA';
+export const ORG_URL = process.env.REACT_APP_ORG_URL || 'https://maprva.org';
+export const ORG_LOGO = process.env.REACT_APP_ORG_LOGO || 'https://maprva.org/img/logo.svg';
 export const HOMEPAGE_IMG_HIGH = process.env.REACT_APP_HOMEPAGE_IMG_HIGH || '';
 export const HOMEPAGE_IMG_LOW = process.env.REACT_APP_HOMEPAGE_IMG_LOW || '';
-export const OSM_CLIENT_ID = process.env.REACT_APP_OSM_CLIENT_ID || '';
-export const OSM_REDIRECT_URI = process.env.REACT_APP_OSM_REDIRECT_URI || '';
+export const OSM_CLIENT_ID =
+  process.env.REACT_APP_OSM_CLIENT_ID || 'NqK2yQWfT3ZmEVZ4RyYob8jL-9_Y0iv5fsXmjQtN3fk';
+export const OSM_REDIRECT_URI =
+  process.env.REACT_APP_OSM_REDIRECT_URI || 'https://tasks.maprva.org/authorized';
 export const ORG_PRIVACY_POLICY_URL = process.env.REACT_APP_ORG_PRIVACY_POLICY_URL || '';
 export const OSM_REGISTER_URL =
   process.env.REACT_APP_OSM_REGISTER_URL || 'https://www.openstreetmap.org/user/new';
@@ -185,7 +186,7 @@ export const DROPZONE_SETTINGS = {
     'image/*': ['.jpeg', '.jpg', '.png', '.webp', '.gif'],
   },
   multiple: false,
-  maxSize: 256000,
+  maxSize: 1 * 1024 * 1024, // 1MB
   // noClick is needed to avoid file picker dialogs when switching between `Write` and `Preview` in `CommentInputField`
   // At time of writing, this workaround is only needed on Chromium based browsers.
   noClick: true,
