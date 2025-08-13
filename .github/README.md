@@ -4,8 +4,9 @@ Three branches.
 
 ## develop
 
-1. Merge in the latest release commit from hotosm
-2. Test deploy (see helm chart repo)
+1. MapRVA makes any changes we wish
+2. Merge in the latest release commit from hotosm
+3. Test deploy (see helm chart repo)
 
 ## staging
 
