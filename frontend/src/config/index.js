@@ -2,7 +2,7 @@
 export const API_VERSION = process.env.REACT_APP_API_VERSION || 'v2';
 export const API_URL = process.env.REACT_APP_API_URL
   ? new URL('/api/' + API_VERSION + '/', process.env.REACT_APP_API_URL)
-  : 'https://tasks.maprva.org/api/' + API_VERSION + '/';
+  : 'https://tasks-develop.maprva.org/api/' + API_VERSION + '/';
 export const OHSOME_STATS_BASE_URL =
   process.env.REACT_APP_OHSOME_STATS_BASE_URL || 'https://stats.now.ohsome.org';
 export const OHSOME_STATS_API_URL =
@@ -32,7 +32,7 @@ export const HOMEPAGE_IMG_LOW = process.env.REACT_APP_HOMEPAGE_IMG_LOW || '';
 export const OSM_CLIENT_ID =
   process.env.REACT_APP_OSM_CLIENT_ID || 'NqK2yQWfT3ZmEVZ4RyYob8jL-9_Y0iv5fsXmjQtN3fk';
 export const OSM_REDIRECT_URI =
-  process.env.REACT_APP_OSM_REDIRECT_URI || 'https://tasks.maprva.org/authorized';
+  process.env.REACT_APP_OSM_REDIRECT_URI || 'https://tasks-develop.maprva.org/authorized';
 export const ORG_PRIVACY_POLICY_URL = process.env.REACT_APP_ORG_PRIVACY_POLICY_URL || '';
 export const OSM_REGISTER_URL =
   process.env.REACT_APP_OSM_REGISTER_URL || 'https://www.openstreetmap.org/user/new';
