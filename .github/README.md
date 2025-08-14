@@ -1,20 +1,8 @@
 # MapRVA Tasking Manager Fork
 
-Three branches.
+This fork accomplishes two things:
 
-## develop
+- enables a fully containerized deployment using [this helm chart](https://github.com/MapRVA/helm-charts/tree/develop/charts/tasking-manager), and
+- adds MapRVA-specific content for our Tasking Manager.
 
-1. MapRVA makes any changes we wish
-2. Merge in the latest release commit from hotosm
-3. Test deploy (see helm chart repo)
-
-## staging
-
-1. Merge in working commit from develop branch
-2. Check https://tasks-staging.maprva.org and make sure everything is working
-  - Confirm that database migration is successful
-
-## production
-
-1. Merge in working commit from staging branch
-2. This goes live immediately on https://tasks.maprva.org
+`develop` branch is where we keep MapRVA's additions to the Tasking Manager project. We will routinely merge in the latest upstream release to keep this fork fresh.
