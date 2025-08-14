@@ -25,8 +25,10 @@ export function Home() {
         <StatsSection />
       </ErrorBoundary>
       <MappingFlow />
+      {/*
       <WhoIsMapping />
       <Testimonials />
+      */}
       <SecondaryJumbotron />
     </div>
   );
