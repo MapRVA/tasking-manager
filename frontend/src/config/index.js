@@ -13,9 +13,8 @@ const getEnvVar = (key, defaultValue) => {
 
 // API ENDPOINTS
 export const API_VERSION = getEnvVar('TM_APP_API_VERSION', 'v2');
-export const API_URL = getEnvVar('TM_APP_API_URL')
-  ? new URL('/api/' + API_VERSION + '/', getEnvVar('TM_APP_API_URL'))
-  : 'http://127.0.0.1:5000/api/' + API_VERSION + '/';
+export const API_URL =
+  getEnvVar('TM_APP_API_URL', 'http://127.0.0.1:5000') + '/api/' + API_VERSION + '/';
 export const OHSOME_STATS_BASE_URL = getEnvVar(
   'OHSOME_STATS_BASE_URL',
   'https://stats.now.ohsome.org',
