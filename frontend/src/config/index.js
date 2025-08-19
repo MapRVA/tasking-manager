@@ -5,15 +5,17 @@ const getEnvVar = (key, defaultValue) => {
     return window._env_[key];
   }
   // Fall back to build-time environment
-  return process.env[key] || defaultValue;
+  if (defaultValue !== undefined) {
+    return process.env[key] || defaultValue;
+  }
+  return process.env[key];
 };
 
 // API ENDPOINTS
 export const API_VERSION = getEnvVar('REACT_APP_API_VERSION', 'v2');
-const apiUrlBase = getEnvVar('REACT_APP_API_URL', '');
-export const API_URL = apiUrlBase
-  ? new URL('/api/' + API_VERSION + '/', apiUrlBase)
-  : 'https://tasks-develop.maprva.org/api/' + API_VERSION + '/';
+export const API_URL = getEnvVar('REACT_APP_API_URL')
+  ? new URL('/api/' + API_VERSION + '/', getEnvVar('REACT_APP_API_URL'))
+  : 'http://127.0.0.1:5000/api/' + API_VERSION + '/';
 export const OHSOME_STATS_BASE_URL = getEnvVar(
   'REACT_APP_OHSOME_STATS_BASE_URL',
   'https://stats.now.ohsome.org',
