@@ -12,91 +12,77 @@ const getEnvVar = (key, defaultValue) => {
 };
 
 // API ENDPOINTS
-export const API_VERSION = getEnvVar('REACT_APP_API_VERSION', 'v2');
-export const API_URL = getEnvVar('REACT_APP_API_URL')
-  ? new URL('/api/' + API_VERSION + '/', getEnvVar('REACT_APP_API_URL'))
+export const API_VERSION = getEnvVar('TM_APP_API_VERSION', 'v2');
+export const API_URL = getEnvVar('TM_APP_API_URL')
+  ? new URL('/api/' + API_VERSION + '/', getEnvVar('TM_APP_API_URL'))
   : 'http://127.0.0.1:5000/api/' + API_VERSION + '/';
 export const OHSOME_STATS_BASE_URL = getEnvVar(
-  'REACT_APP_OHSOME_STATS_BASE_URL',
+  'OHSOME_STATS_BASE_URL',
   'https://stats.now.ohsome.org',
 );
 export const OHSOME_STATS_API_URL = getEnvVar(
-  'REACT_APP_OHSOME_STATS_API_URL',
+  'OHSOME_STATS_API_URL',
   'https://stats.now.ohsome.org/api',
 );
 // APPLICATION SETTINGS
-export const DEFAULT_LOCALE = getEnvVar('REACT_APP_DEFAULT_LOCALE', 'en');
+export const DEFAULT_LOCALE = getEnvVar('TM_DEFAULT_LOCALE', 'en');
 export const ENVIRONMENT = getEnvVar('REACT_APP_ENVIRONMENT', '');
 export const PROJECTCARD_CONTRIBUTION_SHOWN_THRESHOLD = getEnvVar(
   'REACT_APP_PROJECTCARD_CONTRIBUTION_SHOWN_THRESHOLD',
   '5',
 );
-export const INTERMEDIATE_LEVEL_COUNT = Number(
-  getEnvVar('REACT_APP_TM_MAPPER_LEVEL_INTERMEDIATE', '250'),
-);
-export const ADVANCED_LEVEL_COUNT = Number(getEnvVar('REACT_APP_TM_MAPPER_LEVEL_ADVANCED', '500'));
-export const MAPBOX_TOKEN = getEnvVar('REACT_APP_MAPBOX_TOKEN', '');
-export const ENABLE_SERVICEWORKER = getEnvVar('REACT_APP_ENABLE_SERVICEWORKER', '0');
-export const MAX_AOI_AREA = Number(getEnvVar('REACT_APP_MAX_AOI_AREA', '5000'));
-export const MAX_FILESIZE = parseInt(getEnvVar('REACT_APP_MAX_FILESIZE', '1000000')) || 1000000; // bytes
+export const INTERMEDIATE_LEVEL_COUNT = Number(getEnvVar('TM_MAPPER_LEVEL_INTERMEDIATE', '250'));
+export const ADVANCED_LEVEL_COUNT = Number(getEnvVar('TM_MAPPER_LEVEL_ADVANCED', '500'));
+export const MAPBOX_TOKEN = getEnvVar('TM_MAPBOX_TOKEN', '');
+export const ENABLE_SERVICEWORKER = getEnvVar('TM_ENABLE_SERVICEWORKER', '0');
+export const MAX_AOI_AREA = Number(getEnvVar('TM_MAX_AOI_AREA', '5000'));
+export const MAX_FILESIZE = parseInt(getEnvVar('TM_IMPORT_MAX_FILESIZE', '1000000')) || 1000000; // bytes
 
 // ORGANISATIONAL INFORMATION
-export const ORG_NAME = getEnvVar('REACT_APP_ORG_NAME', 'MapRVA');
-export const ORG_CODE = getEnvVar('REACT_APP_ORG_CODE', 'MapRVA');
-export const ORG_URL = getEnvVar('REACT_APP_ORG_URL', 'https://maprva.org');
-export const ORG_LOGO = getEnvVar('REACT_APP_ORG_LOGO', 'https://maprva.org/img/logo.svg');
-export const HOMEPAGE_IMG_HIGH = getEnvVar('REACT_APP_HOMEPAGE_IMG_HIGH', '');
-export const HOMEPAGE_IMG_LOW = getEnvVar('REACT_APP_HOMEPAGE_IMG_LOW', '');
-export const OSM_CLIENT_ID = getEnvVar(
-  'REACT_APP_OSM_CLIENT_ID',
-  'NqK2yQWfT3ZmEVZ4RyYob8jL-9_Y0iv5fsXmjQtN3fk',
-);
-export const OSM_REDIRECT_URI = getEnvVar(
-  'REACT_APP_OSM_REDIRECT_URI',
-  'https://tasks-develop.maprva.org/authorized',
-);
-export const ORG_PRIVACY_POLICY_URL = getEnvVar('REACT_APP_ORG_PRIVACY_POLICY_URL', '');
+export const ORG_NAME = getEnvVar('TM_ORG_NAME', 'MapRVA');
+export const ORG_CODE = getEnvVar('TM_ORG_CODE', 'MapRVA');
+export const ORG_URL = getEnvVar('TM_ORG_URL', 'https://maprva.org');
+export const ORG_LOGO = getEnvVar('TM_ORG_LOGO', 'https://maprva.org/img/logo.svg');
+export const HOMEPAGE_IMG_HIGH = getEnvVar('TM_HOMEPAGE_IMG_HIGH', '');
+export const HOMEPAGE_IMG_LOW = getEnvVar('TM_HOMEPAGE_IMG_LOW', '');
+export const OSM_CLIENT_ID = getEnvVar('TM_CLIENT_ID', '');
+export const OSM_REDIRECT_URI = getEnvVar('TM_REDIRECT_URI', '');
+export const ORG_PRIVACY_POLICY_URL = getEnvVar('TM_ORG_PRIVACY_POLICY_URL', '');
 export const OSM_REGISTER_URL = getEnvVar(
-  'REACT_APP_OSM_REGISTER_URL',
+  'OSM_REGISTER_URL',
   'https://www.openstreetmap.org/user/new',
 );
-export const ORG_TWITTER = getEnvVar('REACT_APP_ORG_TWITTER', '');
-export const ORG_FB = getEnvVar('REACT_APP_ORG_FB', '');
-export const ORG_INSTAGRAM = getEnvVar('REACT_APP_ORG_INSTAGRAM', '');
-export const ORG_YOUTUBE = getEnvVar('REACT_APP_ORG_YOUTUBE', '');
-export const ORG_GITHUB = getEnvVar('REACT_APP_ORG_GITHUB', 'https://github.com/MapRVA');
-export const MATOMO_ID = getEnvVar('REACT_APP_MATOMO_ID', '');
-export const SERVICE_DESK = getEnvVar('REACT_APP_SERVICE_DESK', '');
-export const IMAGE_UPLOAD_SERVICE = getEnvVar('REACT_APP_IMAGE_UPLOAD_API_URL', '');
+export const ORG_TWITTER = getEnvVar('TM_ORG_TWITTER', '');
+export const ORG_FB = getEnvVar('TM_ORG_FB', '');
+export const ORG_INSTAGRAM = getEnvVar('TM_ORG_INSTAGRAM', '');
+export const ORG_YOUTUBE = getEnvVar('TM_ORG_YOUTUBE', '');
+export const ORG_GITHUB = getEnvVar('TM_ORG_GITHUB', 'https://github.com/MapRVA');
+export const MATOMO_ID = getEnvVar('TM_MATOMO_ID', '');
+export const SERVICE_DESK = getEnvVar('TM_SERVICE_DESK', '');
+export const IMAGE_UPLOAD_SERVICE = getEnvVar('TM_IMAGE_UPLOAD_API_URL', '');
 export const TM_DEFAULT_CHANGESET_COMMENT = getEnvVar(
-  'REACT_APP_TM_DEFAULT_CHANGESET_COMMENT',
+  'TM_DEFAULT_CHANGESET_COMMENT',
   '#hotosm-project',
 );
-export const HOMEPAGE_VIDEO_URL = getEnvVar('REACT_APP_HOMEPAGE_VIDEO_URL', '');
+export const HOMEPAGE_VIDEO_URL = getEnvVar('TM_HOMEPAGE_VIDEO_URL', '');
 // Sentry.io DSN
-export const SENTRY_FRONTEND_DSN = getEnvVar('REACT_APP_SENTRY_FRONTEND_DSN', '');
+export const SENTRY_FRONTEND_DSN = getEnvVar('TM_SENTRY_FRONTEND_DSN', '');
 
 // OSM API and Editor URLs
-export const OSM_SERVER_URL = getEnvVar(
-  'REACT_APP_OSM_SERVER_URL',
-  'https://www.openstreetmap.org',
-);
-export const OSM_SERVER_API_URL = getEnvVar(
-  'REACT_APP_OSM_SERVER_API_URL',
-  'https://api.openstreetmap.org',
-);
+export const OSM_SERVER_URL = getEnvVar('OSM_SERVER_URL', 'https://www.openstreetmap.org');
+export const OSM_SERVER_API_URL = getEnvVar('OSM_SERVER_API_URL', 'https://api.openstreetmap.org');
 export const ID_EDITOR_URL = getEnvVar(
-  'REACT_APP_ID_EDITOR_URL',
+  'ID_EDITOR_URL',
   'https://www.openstreetmap.org/edit?editor=id&',
 );
 export const POTLATCH2_EDITOR_URL = getEnvVar(
-  'REACT_APP_POTLATCH2_EDITOR_URL',
+  'POTLATCH2_EDITOR_URL',
   'https://www.openstreetmap.org/edit?editor=potlatch2',
 );
-export const RAPID_EDITOR_URL = getEnvVar('REACT_APP_RAPID_EDITOR_URL', 'https://mapwith.ai/rapid');
-export const EXPORT_TOOL_S3_URL = getEnvVar('REACT_APP_EXPORT_TOOL_S3_URL', '');
-export const ENABLE_EXPORT_TOOL = getEnvVar('REACT_APP_ENABLE_EXPORT_TOOL', '');
-export const DEFAULT_VALIDATOR_TEAM_ID = getEnvVar('REACT_APP_DEFAULT_VALIDATOR_TEAM_ID', null);
+export const RAPID_EDITOR_URL = getEnvVar('RAPID_EDITOR_URL', 'https://mapwith.ai/rapid');
+export const EXPORT_TOOL_S3_URL = getEnvVar('EXPORT_TOOL_S3_URL', '');
+export const ENABLE_EXPORT_TOOL = getEnvVar('ENABLE_EXPORT_TOOL', '');
+export const DEFAULT_VALIDATOR_TEAM_ID = getEnvVar('DEFAULT_VALIDATOR_TEAM_ID', null);
 
 export const TASK_COLOURS = {
   READY: '#fff',
