@@ -2,13 +2,11 @@
 export const API_VERSION = process.env.REACT_APP_API_VERSION || 'v2';
 export const API_URL = process.env.REACT_APP_API_URL
   ? new URL('/api/' + API_VERSION + '/', process.env.REACT_APP_API_URL)
-  : 'https://tasks-develop.maprva.org/api/' + API_VERSION + '/';
+  : 'http://127.0.0.1:5000/api/' + API_VERSION + '/';
 export const OHSOME_STATS_BASE_URL =
   process.env.REACT_APP_OHSOME_STATS_BASE_URL || 'https://stats.now.ohsome.org';
 export const OHSOME_STATS_API_URL =
   process.env.REACT_APP_OHSOME_STATS_API_URL || 'https://stats.now.ohsome.org/api';
-export const OHSOME_STATS_TOPICS =
-  process.env.REACT_APP_OHSOME_STATS_TOPICS || 'highway,waterway,building,poi';
 // APPLICATION SETTINGS
 export const DEFAULT_LOCALE = process.env.REACT_APP_DEFAULT_LOCALE || 'en';
 export const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT || '';
@@ -23,24 +21,24 @@ export const MAX_AOI_AREA = Number(process.env.REACT_APP_MAX_AOI_AREA) || 5000;
 export const MAX_FILESIZE = parseInt(process.env.REACT_APP_MAX_FILESIZE) || 1000000; // bytes
 
 // ORGANISATIONAL INFORMATION
-export const ORG_NAME = process.env.REACT_APP_ORG_NAME || 'MapRVA';
-export const ORG_CODE = process.env.REACT_APP_ORG_CODE || 'MapRVA';
-export const ORG_URL = process.env.REACT_APP_ORG_URL || 'https://maprva.org';
-export const ORG_LOGO = process.env.REACT_APP_ORG_LOGO || 'https://maprva.org/img/logo.svg';
+export const ORG_NAME = process.env.REACT_APP_ORG_NAME || 'Humanitarian OpenStreetMap Team';
+export const ORG_CODE = process.env.REACT_APP_ORG_CODE || 'HOT';
+export const ORG_URL = process.env.REACT_APP_ORG_URL || '';
+export const ORG_LOGO = process.env.REACT_APP_ORG_LOGO || '';
 export const HOMEPAGE_IMG_HIGH = process.env.REACT_APP_HOMEPAGE_IMG_HIGH || '';
 export const HOMEPAGE_IMG_LOW = process.env.REACT_APP_HOMEPAGE_IMG_LOW || '';
-export const OSM_CLIENT_ID =
-  process.env.REACT_APP_OSM_CLIENT_ID || 'NqK2yQWfT3ZmEVZ4RyYob8jL-9_Y0iv5fsXmjQtN3fk';
-export const OSM_REDIRECT_URI =
-  process.env.REACT_APP_OSM_REDIRECT_URI || 'https://tasks-develop.maprva.org/authorized';
+export const OSM_CLIENT_ID = process.env.REACT_APP_OSM_CLIENT_ID || '';
+export const OSM_REDIRECT_URI = process.env.REACT_APP_OSM_REDIRECT_URI || '';
 export const ORG_PRIVACY_POLICY_URL = process.env.REACT_APP_ORG_PRIVACY_POLICY_URL || '';
 export const OSM_REGISTER_URL =
   process.env.REACT_APP_OSM_REGISTER_URL || 'https://www.openstreetmap.org/user/new';
-export const ORG_TWITTER = process.env.REACT_APP_ORG_TWITTER || '';
-export const ORG_FB = process.env.REACT_APP_ORG_FB || '';
-export const ORG_INSTAGRAM = process.env.REACT_APP_ORG_INSTAGRAM || '';
-export const ORG_YOUTUBE = process.env.REACT_APP_ORG_YOUTUBE || '';
-export const ORG_GITHUB = process.env.REACT_APP_ORG_GITHUB || 'https://github.com/MapRVA';
+export const ORG_TWITTER = process.env.REACT_APP_ORG_TWITTER || 'https://twitter.com/hotosm';
+export const ORG_FB = process.env.REACT_APP_ORG_FB || 'https://www.facebook.com/hotosm';
+export const ORG_INSTAGRAM =
+  process.env.REACT_APP_ORG_INSTAGRAM || 'https://www.instagram.com/open.mapping.hubs/';
+export const ORG_YOUTUBE =
+  process.env.REACT_APP_ORG_YOUTUBE || 'https://www.youtube.com/user/hotosm';
+export const ORG_GITHUB = process.env.REACT_APP_ORG_GITHUB || 'https://github.com/hotosm';
 export const MATOMO_ID = process.env.REACT_APP_MATOMO_ID || '';
 export const SERVICE_DESK = process.env.REACT_APP_SERVICE_DESK || '';
 export const IMAGE_UPLOAD_SERVICE = process.env.REACT_APP_IMAGE_UPLOAD_API_URL || '';
