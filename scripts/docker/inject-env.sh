@@ -33,6 +33,12 @@ if [ -f "$HTML_FILE" ]; then
     sed "/<head>/a\\
 <script>$ENV_JS</script>" "$HTML_FILE" > "$TEMP_FILE"
 
+    # Preserve original file permissions and ownership
+    PERMS=$(stat -c "%a" "$HTML_FILE")
+    chmod "$PERMS" "$TEMP_FILE"
+    OWNER=$(stat -c "%u:%g" "$HTML_FILE")
+    chown "$OWNER" "$TEMP_FILE" 2>/dev/null || true
+
     # Replace the original file
     mv "$TEMP_FILE" "$HTML_FILE"
 
