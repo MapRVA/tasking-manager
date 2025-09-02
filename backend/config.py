@@ -46,8 +46,8 @@ class Settings(BaseSettings):
     )
     ENVIRONMENT: str = os.getenv("TM_ENVIRONMENT", "")
     # The default tag used in the OSM changeset comment
-    DEFAULT_CHANGESET_COMMENT: str = os.getenv(
-        "TM_DEFAULT_CHANGESET_COMMENT", "#hot-tm-stage-project"
+    DEFAULT_CHANGESET_COMMENT: str = "#" + os.getenv(
+        "TM_DEFAULT_CHANGESET_COMMENT", "hot-tm-stage-project"
     )
 
     # The address to use as the sender on auto generated emails
