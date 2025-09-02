@@ -62,10 +62,8 @@ export const ORG_GITHUB = getEnvVar('REACT_APP_ORG_GITHUB', 'https://github.com/
 export const MATOMO_ID = getEnvVar('REACT_APP_MATOMO_ID', '');
 export const SERVICE_DESK = getEnvVar('REACT_APP_SERVICE_DESK', '');
 export const IMAGE_UPLOAD_SERVICE = getEnvVar('REACT_APP_IMAGE_UPLOAD_API_URL', '');
-export const TM_DEFAULT_CHANGESET_COMMENT = getEnvVar(
-  'REACT_APP_DEFAULT_CHANGESET_COMMENT',
-  '#hotosm-project',
-);
+export const TM_DEFAULT_CHANGESET_COMMENT =
+  '#' + getEnvVar('REACT_APP_DEFAULT_CHANGESET_COMMENT', '');
 export const HOMEPAGE_VIDEO_URL = getEnvVar('REACT_APP_HOMEPAGE_VIDEO_URL', '');
 // Sentry.io DSN
 export const SENTRY_FRONTEND_DSN = getEnvVar('REACT_APP_SENTRY_FRONTEND_DSN', '');
