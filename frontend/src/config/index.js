@@ -23,6 +23,10 @@ export const OHSOME_STATS_API_URL = getEnvVar(
   'REACT_APP_OHSOME_STATS_API_URL',
   'https://stats.now.ohsome.org/api',
 );
+export const OHSOME_STATS_TOPICS = getEnvVar(
+  'REACT_APP_OHSOME_STATS_TOPICS',
+  'highway,waterway,building,poi',
+);
 // APPLICATION SETTINGS
 export const DEFAULT_LOCALE = getEnvVar('REACT_APP_DEFAULT_LOCALE', 'en');
 export const ENVIRONMENT = getEnvVar('REACT_APP_APP_ENVIRONMENT', '');
