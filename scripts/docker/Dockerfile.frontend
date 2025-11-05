@@ -14,8 +14,8 @@ CMD ["yarn", "start"]
 FROM base AS build
 # TARGETPLATFORM is used to determine the architecture of the build environment. It is auto set by Docker's buildkit when building multi-platform images.
 ARG TARGETPLATFORM
-RUN ./entrypoint.sh
 COPY ./frontend .
+RUN ./entrypoint.sh
 RUN yarn build
 
 
