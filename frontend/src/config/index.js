@@ -34,11 +34,10 @@ export const PROJECTCARD_CONTRIBUTION_SHOWN_THRESHOLD = getEnvVar(
   'REACT_APP_PROJECTCARD_CONTRIBUTION_SHOWN_THRESHOLD',
   '5',
 );
-export const MAPBOX_TOKEN = getEnvVar('REACT_APP_MAPBOX_TOKEN', '');
 export const ENABLE_SERVICEWORKER = getEnvVar('REACT_APP_ENABLE_SERVICEWORKER', '0');
 export const MAX_AOI_AREA = Number(getEnvVar('REACT_APP_MAX_AOI_AREA', '5000'));
 export const MAX_FILESIZE =
-  parseInt(getEnvVar('REACT_APP_IMPORT_MAX_FILESIZE', '1000000')) || 1000000; // bytes
+  Number.parseInt(getEnvVar('REACT_APP_IMPORT_MAX_FILESIZE', '1000000')) || 1000000; // bytes
 
 // ORGANISATIONAL INFORMATION
 export const ORG_NAME = getEnvVar('REACT_APP_ORG_NAME', 'MapRVA');
@@ -134,30 +133,30 @@ const fallbackRasterStyle = {
   ],
 };
 
-const wmsDensityStyle = {
-  version: 8,
-  glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
-  sources: {
-    'raster-tiles': {
-      type: 'raster',
-      tiles: [
-        'https://sedac.ciesin.columbia.edu/geoserver/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=gpw-v3:gpw-v3-population-density-future-estimates_2005',
-      ],
-      tileSize: 256,
-      attribution:
-        '© <a href="https://sedac.ciesin.columbia.edu">Socioeconomic Data and Applications Center (SEDAC)</a>',
-    },
-  },
-  layers: [
-    {
-      id: 'simple-tiles',
-      type: 'raster',
-      source: 'raster-tiles',
-      minzoom: 0,
-      maxzoom: 22,
-    },
-  ],
-};
+// const wmsDensityStyle = {
+//   version: 8,
+//   glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
+//   sources: {
+//     'raster-tiles': {
+//       type: 'raster',
+//       tiles: [
+//         'https://sedac.ciesin.columbia.edu/geoserver/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=gpw-v3:gpw-v3-population-density-future-estimates_2005',
+//       ],
+//       tileSize: 256,
+//       attribution:
+//         '© <a href="https://sedac.ciesin.columbia.edu">Socioeconomic Data and Applications Center (SEDAC)</a>',
+//     },
+//   },
+//   layers: [
+//     {
+//       id: 'simple-tiles',
+//       type: 'raster',
+//       source: 'raster-tiles',
+//       minzoom: 0,
+//       maxzoom: 22,
+//     },
+//   ],
+// };
 
 const bingStyle = {
   version: 8,
@@ -191,11 +190,9 @@ const bingStyle = {
 // Removed Mapbox-specific basemap options ('bright-v9', 'satellite-v9')
 // since we're fully migrated to MapLibre, which does not support mapbox:// styles.
 export const BASEMAP_OPTIONS = [
-  // { label: 'default', value: 'bright-v9' },
   { label: 'Default', value: fallbackRasterStyle },
-  { label: 'density', value: wmsDensityStyle },
+  // { label: 'density', value: wmsDensityStyle },
   { label: 'bing', value: bingStyle },
-  // { label: 'mapbox satellite', value: 'satellite-v9' },
 ];
 
 // Removed Mapbox style conditional since we're now using MapLibre only.
@@ -219,3 +216,49 @@ export const DROPZONE_SETTINGS = {
 
 // TM_DEFAULT_CHANGESET_COMMENT without '#'
 export const defaultChangesetComment = TM_DEFAULT_CHANGESET_COMMENT.replace('#', '');
+
+export const DEFAULT_MAP_STYLE = {
+  version: 8,
+  glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
+  sources: {},
+  layers: [],
+};
+
+// base layers list on single object along with visibility
+export const baseLayers = {
+  OSM: {
+    source: {
+      type: 'raster',
+      tiles: ['https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution:
+        '© <a href="https://www.openstreetmap.org/copyright/">OpenStreetMap</a> contributors',
+    },
+    layer: {
+      id: 'OSM-layer',
+      type: 'raster',
+      source: 'OSM-source',
+      layout: { visibility: 'visible' },
+    },
+  },
+  bing: {
+    source: {
+      type: 'raster',
+      tiles: [
+        'https://ecn.t0.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=587&mkt=en-gb&n=z',
+        'https://ecn.t1.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=587&mkt=en-gb&n=z',
+        'https://ecn.t2.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=587&mkt=en-gb&n=z',
+        'https://ecn.t3.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=587&mkt=en-gb&n=z',
+      ],
+      tileSize: 256,
+      attribution:
+        '© <a href="https://blog.openstreetmap.org/2010/11/30/microsoft-imagery-details">Microsoft Corporation</a>',
+    },
+    layer: {
+      id: 'bing-layer',
+      type: 'raster',
+      source: 'bing-source',
+      layout: { visibility: 'none' },
+    },
+  },
+};

@@ -749,7 +749,9 @@ class Task(Base):
             task.y = task_feature.properties["y"]
             task.zoom = task_feature.properties["zoom"]
             task.is_square = task_feature.properties["isSquare"]
-            task.geometry = shape(task_feature.geometry).wkt
+            wkt = shape(task_feature.geometry).wkt
+            ewkt = f"SRID=4326;{wkt}"
+            task.geometry = ewkt
         except KeyError as e:
             raise InvalidData(
                 f"PropertyNotFound: Expected property not found: {str(e)}"
@@ -1394,7 +1396,8 @@ class Task(Base):
                 t.task_status,
                 ST_AsGeoJSON(t.geometry) AS geojson,
                 t.locked_by,
-                t.mapped_by
+                t.mapped_by,
+                t.validated_by
             FROM tasks t
             WHERE t.project_id = :project_id
         """
@@ -1447,6 +1450,7 @@ class Task(Base):
                 taskStatus=TaskStatus(row["task_status"]).name,
                 lockedBy=row["locked_by"],
                 mappedBy=row["mapped_by"],
+                validatedBy=row["validated_by"],
             )
             feature = geojson.Feature(
                 geometry=task_geometry, properties=task_properties

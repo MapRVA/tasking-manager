@@ -29,6 +29,7 @@ from sqlalchemy import (
     orm,
     select,
     update,
+    UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -96,9 +97,15 @@ project_allowed_users = Table(
 
 class ProjectTeams(Base):
     __tablename__ = "project_teams"
-    team_id = Column(Integer, ForeignKey("teams.id"), primary_key=True)
-    project_id = Column(Integer, ForeignKey("projects.id"), primary_key=True)
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    team_id = Column(Integer, ForeignKey("teams.id"), nullable=False)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
     role = Column(Integer, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("team_id", "project_id", "role", name="uq_project_team_role"),
+    )
 
     project = relationship(
         "Project", backref=backref("teams", cascade="all, delete-orphan")
@@ -286,7 +293,7 @@ class Project(Base):
         valid_geojson = geojson.dumps(aoi_geometry)
 
         query = """
-        SELECT ST_AsText(
+        SELECT ST_AsEWKT(
             ST_SetSRID(
                 ST_GeomFromGeoJSON(:geojson), 4326
             )
@@ -295,9 +302,8 @@ class Project(Base):
         # Execute the query with the GeoJSON value passed in as a parameter
         result = await db.fetch_one(query=query, values={"geojson": valid_geojson})
         self.geometry = result["geometry_wkt"] if result else None
-
         query = """
-        SELECT ST_AsText(ST_Centroid(ST_SetSRID(ST_GeomFromGeoJSON(:geometry), 4326))) AS centroid
+        SELECT ST_AsEWKT(ST_Centroid(ST_SetSRID(ST_GeomFromGeoJSON(:geometry), 4326))) AS centroid
         """
 
         # Execute the query and pass the GeoJSON as a parameter

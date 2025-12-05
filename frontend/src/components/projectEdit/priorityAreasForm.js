@@ -1,19 +1,16 @@
 import { useState, useContext, useLayoutEffect, createRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
-import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import DrawRectangle from 'mapbox-gl-draw-rectangle-mode';
-import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import { featureCollection } from '@turf/helpers';
 import { FormattedMessage } from 'react-intl';
 import { useDropzone } from 'react-dropzone';
+import { TerraDrawPolygonMode, TerraDrawRectangleMode } from 'terra-draw';
 
 import messages from './messages';
 import { StateContext, styleClasses } from '../../views/projectEdit';
 import { CustomButton } from '../button';
 import { MappedIcon, WasteIcon, MappedSquareIcon, FileImportIcon } from '../svgIcons';
-import { MAPBOX_TOKEN, MAP_STYLE, CHART_COLOURS } from '../../config';
+import { CHART_COLOURS, baseLayers, DEFAULT_MAP_STYLE } from '../../config';
 import { BasemapMenu } from '../basemapMenu';
 import {
   verifyGeometry,
@@ -26,47 +23,40 @@ import useSetRTLTextPlugin from '../../utils/useSetRTLTextPlugin';
 import { getErrorMsg } from '../projectCreate/fileUploadErrors';
 import { Alert } from '../alert';
 import WebglUnsupported from '../webglUnsupported';
-import useMapboxSupportedLanguage from '../../hooks/UseMapboxSupportedLanguage';
-
-maplibregl.accessToken = MAPBOX_TOKEN;
+import { MaplibreTerradrawControl } from '@watergis/maplibre-gl-terradraw';
+import { getAllFeatures } from '../../utils/terrawDraw';
+import './style.scss';
 
 export const PriorityAreasForm = () => {
   const { projectInfo, setProjectInfo } = useContext(StateContext);
-  const mapboxSupportedLanguage = useMapboxSupportedLanguage();
   const mapRef = createRef();
   const [error, setError] = useState({ error: false, message: null });
 
   useSetRTLTextPlugin();
 
-  const modes = MapboxDraw.modes;
-  modes.draw_rectangle = DrawRectangle;
-  const drawOptions = {
-    displayControlsDefault: false,
-    modes: modes,
-    styles: [
-      {
-        id: 'gl-draw-polygon-fill-inactive',
-        type: 'fill',
-        paint: {
-          'fill-color': '#d73f3f',
-          'fill-opacity': 0.3,
-        },
-      },
-      {
-        id: 'gl-draw-polygon-line-inactive',
-        type: 'line',
-        paint: {
-          'line-color': '#d73f3f',
-          'line-dasharray': [2, 2],
-          'line-width': 2,
-          'line-opacity': 0.7,
-        },
-      },
-    ],
+  const styles = {
+    fillColor: '#d73f3f',
+    fillOpacity: 0.3,
+    outlineColor: '#d73f3f',
+    outlineWidth: 1,
+    closingPointColor: '#d73f3f',
+    closingPointWidth: 1,
+    closingPointOutlineColor: '#d73f3f',
+    closingPointOutlineWidth: 1,
   };
+
+  const drawOptions = {
+    modes: ['delete', 'polygon', 'select', 'rectangle', 'render'],
+    open: true,
+    modeOptions: {
+      polygon: new TerraDrawPolygonMode({ styles }),
+      rectangle: new TerraDrawRectangleMode({ styles }),
+    },
+  };
+
   const [mapObj, setMapObj] = useState({
     map: null,
-    draw: new MapboxDraw(drawOptions),
+    draw: new MaplibreTerradrawControl(drawOptions),
   });
   const [activeMode, setActiveMode] = useState(null);
 
@@ -122,13 +112,12 @@ export const PriorityAreasForm = () => {
       isWebglSupported() &&
       new maplibregl.Map({
         container: mapRef.current,
-        style: MAP_STYLE,
+        style: DEFAULT_MAP_STYLE,
         center: [0, 0],
         zoom: 1,
         attributionControl: false,
       })
         .addControl(new maplibregl.AttributionControl({ compact: false }))
-        .addControl(new MapboxLanguage({ defaultLanguage: mapboxSupportedLanguage }))
         .addControl(new maplibregl.NavigationControl());
 
     setMapObj({ ...mapObj, map: map });
@@ -138,6 +127,14 @@ export const PriorityAreasForm = () => {
   }, []);
 
   const addMapLayers = (map) => {
+    // load all base layer and toggle visibility
+    for (const [key, value] of Object.entries(baseLayers)) {
+      if (mapObj.map.getSource(`${key}-source`) === undefined) {
+        mapObj.map.addSource(`${key}-source`, value.source);
+        mapObj.map.addLayer(value.layer);
+      }
+    }
+
     if (map.getSource('aoi') === undefined) {
       map.addSource('aoi', {
         type: 'geojson',
@@ -169,7 +166,7 @@ export const PriorityAreasForm = () => {
         source: 'priority_areas',
         paint: {
           'line-color': '#d73f3f',
-          'line-dasharray': [2, 2],
+          // 'line-dasharray': [2, 2],
           'line-width': 2,
           'line-opacity': 0.7,
         },
@@ -193,43 +190,51 @@ export const PriorityAreasForm = () => {
     }
   };
 
-  const updatePriorityAreas = (event) => {
-    priorityAreas.push(event.features[0].geometry);
+  const updatePriorityAreas = (feature) => {
+    priorityAreas.push(feature[0].geometry);
     setProjectInfo({ ...projectInfo, priorityAreas: priorityAreas });
     setActiveMode(null);
   };
 
   const drawPolygonHandler = () => {
+    const drawInstance = mapObj.draw.getTerraDrawInstance();
     if (activeMode === 'draw_polygon') {
       setActiveMode(null);
-      mapObj.draw.changeMode('simple_select');
+      drawInstance.setMode('select');
       return;
     }
-
+    drawInstance.setMode('polygon');
     setActiveMode('draw_polygon');
-    mapObj.map.on('draw.update', updatePriorityAreas);
-    mapObj.map.once('draw.create', updatePriorityAreas);
-    mapObj.draw.changeMode('draw_polygon');
+    drawInstance.on('finish', (id) => {
+      const allFeatures = getAllFeatures(drawInstance);
+      const newFeature = allFeatures.filter((f) => f.id === id);
+      updatePriorityAreas(newFeature);
+      drawInstance.setMode('render');
+    });
   };
 
   const drawRectangleHandler = () => {
+    const drawInstance = mapObj.draw.getTerraDrawInstance();
     if (activeMode === 'draw_rectangle') {
       setActiveMode(null);
-      mapObj.draw.changeMode('simple_select');
+      drawInstance.setMode('select');
       return;
     }
-
+    drawInstance.setMode('rectangle');
     setActiveMode('draw_rectangle');
-    mapObj.map.on('draw.update', updatePriorityAreas);
-    mapObj.map.once('draw.create', updatePriorityAreas);
-    mapObj.draw.changeMode('draw_rectangle');
+    drawInstance.on('finish', (id) => {
+      const allFeatures = getAllFeatures(drawInstance);
+      const newFeature = allFeatures.filter((f) => f.id === id);
+      updatePriorityAreas(newFeature);
+      drawInstance.setMode('render');
+    });
   };
 
   useLayoutEffect(() => {
     if (mapObj.map !== null && isWebglSupported()) {
       mapObj.map.on('load', () => {
-        mapObj.map.addControl(mapObj.draw);
         addMapLayers(mapObj.map);
+        mapObj.map.addControl(mapObj.draw, 'bottom-left');
         mapObj.map.fitBounds(projectInfo.aoiBBOX, { duration: 0, padding: 100 });
       });
 
@@ -246,9 +251,8 @@ export const PriorityAreasForm = () => {
   }, [mapObj.map, mapObj.draw, projectInfo, setProjectInfo, drawPriorityAreas]);
 
   const clearAll = () => {
-    const currentDrawMode = mapObj.draw.getMode();
-    mapObj.draw.deleteAll();
-    mapObj.draw.changeMode(currentDrawMode);
+    const drawInstance = mapObj.draw.getTerraDrawInstance();
+    drawInstance.clear();
     mapObj.map.getSource('priority_areas').setData(featureCollection([]));
     setProjectInfo({ ...projectInfo, priorityAreas: [] });
   };
