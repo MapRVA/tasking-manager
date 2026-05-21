@@ -17,6 +17,7 @@ import { remapParamsToAPI } from '../utils/remapParamsToAPI';
 import { API_URL } from '../config';
 
 const projectQueryAllSpecification = {
+  sandbox:StringParam,
   difficulty: StringParam,
   organisation: StringParam,
   campaign: StringParam,
@@ -44,6 +45,7 @@ const projectQueryAllSpecification = {
   partnershipTo: StringParam,
   downloadAsCSV: BooleanParam,
   view: StringParam,
+  imagery: StringParam,
 };
 
 /* This can be passed into project API or used independently */
@@ -55,6 +57,7 @@ export const useExploreProjectsQueryParams = () => {
    this fn takes an object with queryparam keys and outputs JSON keys
    while maintaining the same values */
 const backendToQueryConversion = {
+  sandbox:'sandbox',
   difficulty: 'difficulty',
   campaign: 'campaign',
   team: 'teamId',
@@ -77,6 +80,7 @@ const backendToQueryConversion = {
   createdFrom: 'createdFrom',
   basedOnMyInterests: 'basedOnMyInterests',
   omitMapResults: 'omitMapResults',
+  imagery: 'imagery',
 };
 
 const dataFetchReducer = (state, action) => {

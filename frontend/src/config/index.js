@@ -25,7 +25,7 @@ export const OHSOME_STATS_API_URL = getEnvVar(
 );
 export const OHSOME_STATS_TOPICS = getEnvVar(
   'REACT_APP_OHSOME_STATS_TOPICS',
-  'highway,waterway,building,poi',
+  'road,waterway,building,poi',
 );
 // APPLICATION SETTINGS
 export const DEFAULT_LOCALE = getEnvVar('REACT_APP_DEFAULT_LOCALE', 'en');
@@ -88,6 +88,16 @@ export const RAPID_EDITOR_URL = getEnvVar('REACT_APP_RAPID_EDITOR_URL', 'https:/
 export const EXPORT_TOOL_S3_URL = getEnvVar('REACT_APP_EXPORT_TOOL_S3_URL', '');
 export const ENABLE_EXPORT_TOOL = getEnvVar('REACT_APP_ENABLE_EXPORT_TOOL', '');
 export const DEFAULT_VALIDATOR_TEAM_ID = getEnvVar('REACT_APP_DEFAULT_VALIDATOR_TEAM_ID', null);
+
+// For default sandbox db
+export const DEFAULT_SANDBOX_DB = getEnvVar('REACT_APP_SANDBOX_DB', 'osm');
+export const SANDBOX_DASHBOARD_API_URL = getEnvVar('REACT_APP_SANDBOX_DASHBOARD_API_URL', null);
+
+// Only enable sandbox when the env var is explicitly set to a truthy value
+const truthyValues = ['true', '1', 'yes'];
+export const IS_SANDBOX_ENABLED = truthyValues.includes(
+  getEnvVar('REACT_APP_ENABLE_SANDBOX', '')?.toLowerCase() ?? '',
+);
 
 export const TASK_COLOURS = {
   READY: '#fff',

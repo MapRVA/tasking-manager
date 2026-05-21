@@ -146,9 +146,13 @@ export default defineMessages({
     id: 'user.notifications.projects',
     defaultMessage: 'Project updates',
   },
-  taskUpdates: {
-    id: 'user.notifications.tasks',
-    defaultMessage: 'Tasks validation emails',
+  taskValidationUpdates: {
+    id: 'user.notifications.tasks.validation',
+    defaultMessage: 'Task validation emails',
+  },
+  taskInvalidationUpdates: {
+    id: 'user.notifications.tasks.invalidation',
+    defaultMessage: 'Task invalidation emails',
   },
   required: {
     id: 'user.settings.required',
@@ -158,9 +162,13 @@ export default defineMessages({
     id: 'user.notifications.projects.description',
     defaultMessage: 'You get a notification when a project you have contributed to makes progress.',
   },
-  taskUpdatesDescription: {
-    id: 'user.notifications.task.description',
+  taskValidationUpdatesDescription: {
+    id: 'user.notifications.task.validation.description',
     defaultMessage: 'Receive an email when a task you have contributed to is validated.',
+  },
+  taskInvalidationUpdatesDescription: {
+    id: 'user.notifications.task.invalidation.description',
+    defaultMessage: 'Receive an email when a task you have contributed to is invalidated.',
   },
   questionsAndComments: {
     id: 'user.notifications.questionsAndComments',
@@ -401,6 +409,7 @@ export default defineMessages({
   tableUpgrade: { id: 'user.table.upgrade', defaultMessage: 'Level upgrade' },
   tableUsername: { id: 'user.table.username', defaultMessage: 'Username' },
   tableCol_highway: { id: 'user.table.highway', defaultMessage: 'Highways' },
+  tableCol_road: { id: 'user.table.road', defaultMessage: 'Roads' },
   tableCol_waterway: { id: 'user.table.waterway', defaultMessage: 'Waterways' },
   tableCol_building: { id: 'user.table.building', defaultMessage: 'Buildings' },
   tableCol_changeset: { id: 'user.table.changeset', defaultMessage: 'Changesets' },
@@ -415,6 +424,7 @@ export default defineMessages({
   progress_changeset: { id: 'user.progress.changeset', defaultMessage: 'changesets' },
   progress_waterway: { id: 'user.progress.waterway', defaultMessage: 'km of waterways' },
   progress_highway: { id: 'user.progress.highway', defaultMessage: 'km of highways' },
+  progress_road: { id: 'user.progress.road', defaultMessage: 'km of roads' },
   progress_poi: { id: 'user.progress.poi', defaultMessage: 'points of interest' },
   progress_building: { id: 'user.progress.building', defaultMessage: 'buildings' },
 });

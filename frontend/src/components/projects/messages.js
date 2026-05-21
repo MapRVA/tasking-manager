@@ -12,6 +12,23 @@ export default defineMessages({
     id: 'project.nav.mappingDifficulty',
     defaultMessage: 'Difficulty level',
   },
+  mappingDatabase: {
+    id: 'project.nav.mappingDatabase',
+    defaultMessage: 'Mapping Mode',
+  },
+  allDabase: {
+    id: 'project.nav.mappingDatabase.option.all',
+    defaultMessage: 'All',
+  },
+  sandboxDabase: {
+    id: 'project.nav.mappingDatabase.option.sandbox',
+    defaultMessage: 'Sandbox (No real OSM edits)',
+  },
+  OSMDatabase: {
+    id: 'project.nav.mappingDatabase.option.OSM',
+    defaultMessage: 'OpenStreetMap (Live)',
+  },
+
   moreFilters: {
     id: 'project.nav.moreFilters',
     defaultMessage: 'More filters',
@@ -255,6 +272,14 @@ export default defineMessages({
   retry: {
     id: 'project.results.retry',
     defaultMessage: 'Retry',
+  },
+  imagery: {
+    id: 'project.navFilters.imagery',
+    defaultMessage: 'Imagery',
+  },
+  selectImagery: {
+    id: 'project.navFilters.selectImagery',
+    defaultMessage: 'Select imagery',
   },
   partner: {
     id: 'project.navFilters.partner',

@@ -14,6 +14,7 @@ import {
   FourCellsGridIcon,
   NineCellsGridIcon,
 } from '../svgIcons';
+import { getAllFeatures, removeFeaturesById } from '../../utils/terrawDraw';
 
 export default function SetTaskSizes({ metadata, mapObj, updateMetadata }) {
   const [splitMode, setSplitMode] = useState(null);
@@ -55,36 +56,50 @@ export default function SetTaskSizes({ metadata, mapObj, updateMetadata }) {
     }
   }, [mapObj, splitHandler, splitMode]);
 
-  const splitDrawing = () => {
+  const splitDrawing = useCallback(() => {
+    const drawInstance = mapObj.draw.getTerraDrawInstance();
+    if (!drawInstance) return;
+
+    if (splitMode === 'draw') {
+      setSplitMode(null);
+      drawInstance.setMode('select');
+      return;
+    }
     setSplitMode('draw');
-    mapObj.map.on('mouseenter', 'grid', (event) => {
-      mapObj.map.getCanvas().style.cursor = 'crosshair';
-    });
-    mapObj.map.on('mouseleave', 'grid', (event) => {
-      mapObj.map.getCanvas().style.cursor = '';
-    });
-    mapObj.map.once('draw.create', (event) => {
-      const taskGrid = mapObj.map.getSource('grid')._data;
-      if (metadata.tempTaskGrid === null) {
-        updateMetadata({ ...metadata, tempTaskGrid: taskGrid });
+    drawInstance.setMode('polygon');
+
+    drawInstance.on('finish', (id) => {
+      const allFeatures = getAllFeatures(drawInstance);
+      const previousFeatureIds = allFeatures.reduce(
+        (prev, curr) => (curr.id !== id ? [...prev, curr.id] : prev),
+        [],
+      );
+      const newFeature = allFeatures.filter((f) => f.id === id);
+
+      if (previousFeatureIds.length > 0) {
+        removeFeaturesById(drawInstance, previousFeatureIds);
       }
 
-      const id = event.features[0].id;
-      mapObj.draw.delete(id);
+      if (newFeature.length > 0) {
+        const geom = newFeature[0].geometry;
+        const taskGrid = mapObj.map.getSource('grid')._data;
+        if (metadata.tempTaskGrid === null) {
+          updateMetadata({ ...metadata, tempTaskGrid: taskGrid });
+        }
 
-      const geom = event.features[0].geometry;
-      const newTaskGrid = splitTaskGrid(taskGrid, geom);
+        const newTaskGrid = splitTaskGrid(taskGrid, geom);
 
-      updateMetadata({
-        ...metadata,
-        taskGrid: featureCollection(newTaskGrid),
-        tasksNumber: featureCollection(newTaskGrid).features.length,
-      });
+        updateMetadata({
+          ...metadata,
+          taskGrid: featureCollection(newTaskGrid),
+          tasksNumber: featureCollection(newTaskGrid).features.length,
+        });
+      }
+      removeFeaturesById(drawInstance, [id]);
+      drawInstance.setMode('select');
       setSplitMode(null);
     });
-
-    mapObj.draw.changeMode('draw_polygon');
-  };
+  }, [mapObj.draw, mapObj.map, splitMode, metadata, updateMetadata]);
 
   const resetGrid = () => {
     updateMetadata({ ...metadata, taskGrid: metadata.tempTaskGrid });

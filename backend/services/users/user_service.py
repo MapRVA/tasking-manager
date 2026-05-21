@@ -7,7 +7,6 @@ from loguru import logger
 from sqlalchemy import and_, desc, distinct, func, insert, select
 from httpx import AsyncClient
 
-from backend.config import Settings
 from backend.exceptions import NotFound
 from backend.models.dtos.interests_dto import InterestDTO, InterestsListDTO
 from backend.models.dtos.project_dto import ProjectFavoritesDTO, ProjectSearchResultsDTO
@@ -50,9 +49,7 @@ from backend.services.messaging.template_service import (
 from backend.services.users.osm_service import OSMService
 from backend.services.mapping_levels import MappingLevelService
 from fastapi import HTTPException
-
-
-settings = Settings()
+from backend.config import settings
 
 
 class UserServiceError(Exception):
@@ -173,25 +170,48 @@ class UserService:
     @staticmethod
     async def get_and_save_stats(user_id: int, db: Database) -> dict:
         hashtag = settings.DEFAULT_CHANGESET_COMMENT.replace("#", "")
-        url = (
+        oh_some_url = (
             f"{settings.OHSOME_STATS_API_URL}/stats/user?"
             f"hashtag={hashtag}-%2A&userId={user_id}"
             f"&topics={settings.OHSOME_STATS_TOPICS}"
         )
         osm_user_details_url = f"{settings.OSM_SERVER_URL}/api/0.6/user/{user_id}.json"
-        headers = {"Authorization": f"Basic {settings.OHSOME_STATS_TOKEN}"}
+
+        oh_some_headers = {"Authorization": f"Basic {settings.OHSOME_STATS_TOKEN}"}
+        osm_headers = {"User-Agent": settings.OSM_USER_AGENT}
 
         async with AsyncClient(timeout=10.0) as client:
-            response = await client.get(url, headers=headers)
-            changeset_response = await client.get(osm_user_details_url)
+            oh_some_response = await client.get(oh_some_url, headers=oh_some_headers)
+            changeset_response = await client.get(
+                osm_user_details_url, headers=osm_headers
+            )
 
-        if response.status_code != 200:
-            raise UserServiceError("External-Error in Ohsome API")
+        if oh_some_response.status_code != 200:
 
-        topic_data = response.json()
+            error_msg = (
+                "External-Error in Ohsome API: url=%s status_code=%s response=%s"
+                % (
+                    oh_some_url,
+                    oh_some_response.status_code,
+                    oh_some_response.text[:500],
+                )
+            )
+            logger.exception(error_msg)
+            return {}
+
+        topic_data = oh_some_response.json()
 
         if changeset_response.status_code != 200:
-            raise UserServiceError("External-Error in OSM API")
+            error_msg = (
+                "External-Error in OSM API: url=%s status_code=%s response=%s"
+                % (
+                    osm_user_details_url,
+                    changeset_response.status_code,
+                    changeset_response.text[:500],
+                )
+            )
+            logger.exception(error_msg)
+            return {}
 
         changeset_data = changeset_response.json()
 
@@ -231,6 +251,8 @@ class UserService:
             "projects_comments_notifications": False,
             "projects_notifications": True,
             "tasks_notifications": True,
+            "task_validation_notification": True,
+            "task_invalidation_notification": True,
             "tasks_comments_notifications": False,
             "teams_announcement_notifications": True,
             "date_registered": datetime.datetime.utcnow(),

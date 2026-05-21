@@ -39,6 +39,7 @@ from backend.services.mapping_issues_service import (
 )
 from backend.services.organisation_service import OrganisationService
 from backend.services.users.authentication_service import AuthenticationService
+import sqlalchemy as sa
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -56,6 +57,38 @@ TEST_CAMPAIGN_NAME = "Test Campaign"
 TEST_CAMPAIGN_ID = 1
 TEST_MESSAGE_SUBJECT = "Test subject"
 TEST_MESSAGE_DETAILS = "This is a test message"
+
+
+async def create_mapping_levels(db):
+    # Ensure clean slate (important for repeated test runs)
+    await db.execute(sa.text("DELETE FROM mapping_levels"))
+
+    await db.execute(
+        sa.text(
+            """
+            INSERT INTO mapping_levels (id, name, ordering, is_beginner, approvals_required)
+            VALUES (1, 'BEGINNER', 1, true, 0)
+            """
+        )
+    )
+
+    await db.execute(
+        sa.text(
+            """
+            INSERT INTO mapping_levels (id, name, ordering, is_beginner, approvals_required)
+            VALUES (2, 'INTERMEDIATE', 2, false, 0)
+            """
+        )
+    )
+
+    await db.execute(
+        sa.text(
+            """
+            INSERT INTO mapping_levels (id, name, ordering, is_beginner, approvals_required)
+            VALUES (3, 'ADVANCED', 3, false, 0)
+            """
+        )
+    )
 
 
 def get_canned_osm_user_details():
@@ -221,6 +254,8 @@ async def return_canned_user(db, username=TEST_USERNAME, id=TEST_USER_ID) -> Use
     test_user.projects_comments_notifications = False
     test_user.projects_notifications = True
     test_user.tasks_notifications = True
+    test_user.task_validation_notification = True
+    test_user.task_invalidation_notification = True
     test_user.tasks_comments_notifications = False
     test_user.teams_announcement_notifications = True
     test_user.date_registered = datetime.utcnow()
@@ -248,6 +283,7 @@ async def create_canned_user(db, test_user=None):
             id, username, role, mapping_level, tasks_mapped, tasks_validated, tasks_invalidated,
             email_address, is_email_verified, is_expert, default_editor, mentions_notifications,
             projects_comments_notifications, projects_notifications, tasks_notifications,
+            task_validation_notification, task_invalidation_notification,
             tasks_comments_notifications, teams_announcement_notifications, date_registered,
             last_validation_date
         )
@@ -255,6 +291,7 @@ async def create_canned_user(db, test_user=None):
             :id, :username, :role, :mapping_level, :tasks_mapped, :tasks_validated, :tasks_invalidated,
             :email_address, :is_email_verified, :is_expert, :default_editor, :mentions_notifications,
             :projects_comments_notifications, :projects_notifications, :tasks_notifications,
+            :task_validation_notification, :task_invalidation_notification,
             :tasks_comments_notifications, :teams_announcement_notifications, :date_registered,
             :last_validation_date
         )
@@ -275,6 +312,8 @@ async def create_canned_user(db, test_user=None):
             "projects_comments_notifications": test_user.projects_comments_notifications,
             "projects_notifications": test_user.projects_notifications,
             "tasks_notifications": test_user.tasks_notifications,
+            "task_validation_notification": test_user.task_validation_notification,
+            "task_invalidation_notification": test_user.task_invalidation_notification,
             "tasks_comments_notifications": test_user.tasks_comments_notifications,
             "teams_announcement_notifications": test_user.teams_announcement_notifications,
             "date_registered": test_user.date_registered,
@@ -518,17 +557,24 @@ async def update_project_with_info(test_project: Project, db) -> Project:
     test_info.instructions = "Instructions"
     locales.append(test_info)
 
-    test_dto = ProjectDTO()
-    test_dto.project_status = ProjectStatus.PUBLISHED.name
-    test_dto.project_priority = ProjectPriority.MEDIUM.name
-    test_dto.default_locale = "en"
-    test_dto.project_info_locales = locales
-    test_dto.difficulty = "EASY"
-    test_dto.mapping_types = ["ROADS"]
-    test_dto.mapping_editors = ["JOSM", "ID"]
-    test_dto.validation_editors = ["JOSM"]
-    test_dto.changeset_comment = "hot-project"
-    test_dto.private = False
+    test_dto = ProjectDTO(
+        project_id=test_project.id,
+        project_status=ProjectStatus.PUBLISHED.name,
+        project_priority=ProjectPriority.MEDIUM.name,
+        default_locale="en",
+        difficulty="EASY",
+        mapping_permission="ANY",
+        mapping_permission_level_id=0,
+        validation_permission="ANY",
+        validation_permission_level_id=0,
+        private=False,
+        task_creation_mode="GRID",
+        mapping_editors=["JOSM", "ID"],
+        validation_editors=["JOSM"],
+        project_info_locales=locales,
+        mapping_types=["ROADS"],
+        changeset_comment="hot-project",
+    )
     await test_project.update(test_dto, db)
 
     return test_project
